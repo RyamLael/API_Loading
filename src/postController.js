@@ -41,8 +41,10 @@ export default {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
 
-      if (page < 1 && limit < 1) 
-        return res.status(400).json({ error: 'page and limit must be positive intergers.' });
+      if (page < 1 && limit < 1)
+        return res
+          .status(400)
+          .json({ error: 'page and limit must be positive intergers.' });
 
       const offset = (page - 1) * limit;
 
@@ -55,7 +57,12 @@ export default {
       });
 
       if (posts.length === 0)
-        return res.status(404).json({ error: 'the page you are trying to access exceeds the number of pages that contain posts.' });
+        return res
+          .status(404)
+          .json({
+            error:
+              'the page you are trying to access exceeds the number of pages that contain posts.',
+          });
 
       return res.status(200).json(posts);
     } catch (error) {
@@ -68,8 +75,7 @@ export default {
       const { UUID } = req.params;
       const post = await prisma.post.findUnique({ where: { UUID: UUID } });
 
-      if (!post)
-        return res.status(404).json({ error: 'Post not found' });
+      if (!post) return res.status(404).json({ error: 'Post not found' });
 
       return res.json(post);
     } catch (error) {
@@ -108,8 +114,7 @@ export default {
       const { UUID } = req.params;
       let post = await prisma.post.findUnique({ where: { UUID: UUID } });
 
-      if (!post) 
-        return res.status(404).json({ error: 'Post not found' });
+      if (!post) return res.status(404).json({ error: 'Post not found' });
 
       post = await prisma.post.delete({ where: { UUID: UUID } });
 

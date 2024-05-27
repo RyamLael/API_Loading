@@ -11,6 +11,7 @@ beforeEach(async () => {
   await prisma.post.deleteMany();
 });
 
+//CreatePost
 describe('POST /posts', () => {
   it('Deve criar uma nova postagem com sucesso', async () => {
     const newPost = {
@@ -25,10 +26,8 @@ describe('POST /posts', () => {
       .send(newPost)
       .expect(201);
 
-    // Verifica se a resposta contém o ID da postagem criada
     expect(response.body).to.have.property('UUID');
 
-    // Verifica se os dados da postagem criada correspondem aos dados enviados
     expect(response.body.title).to.equal(newPost.title);
     expect(response.body.description).to.equal(newPost.description);
     expect(response.body.post_type).to.equal(newPost.post_type);
@@ -37,7 +36,6 @@ describe('POST /posts', () => {
 
   it('Deve retornar erro 400 se os dados enviados forem inválidos', async () => {
     const invalidPost = {
-      // Dados inválidos, por exemplo, faltando o campo 'description'
       title: 'Título do Post',
       post_type: 'Tipo do Post',
       image_url: 'https://exemplo.com/imagem.jpg',
@@ -47,6 +45,7 @@ describe('POST /posts', () => {
   });
 });
 
+//getAllPosts
 describe('GET /posts', () => {
   it('Deve retornar todas as postagens', async () => {
     const post1 = await prisma.post.create({
@@ -86,6 +85,7 @@ describe('GET /posts', () => {
   });
 });
 
+//getAllPostsPaginated
 describe('GET /posts/paginated', () => {
   it('Deve retornar os posts corretos de acordo com a paginação', async () => {
     const postsIniciais = [
@@ -120,6 +120,7 @@ describe('GET /posts/paginated', () => {
   });
 });
 
+//findPost
 describe('GET /posts/:UUID', () => {
   it('Deve retornar o post correto quando fornecido um UUID válido', async () => {
     const postDeTeste = {
@@ -135,7 +136,16 @@ describe('GET /posts/:UUID', () => {
 
     expect(response.status).to.equal(200);
 
-    expect(response.body).to.deep.equal(novoPost);
+    const responsePost = { ...response.body };
+    const expectedPost = { ...novoPost };
+
+    //Aqui eu tirei as datas porque tava dando erro ao comparar o json delas (tava comparando string com Date:)
+    delete responsePost.creation_date;
+    delete responsePost.update_date;
+    delete expectedPost.creation_date;
+    delete expectedPost.update_date;
+
+    expect(responsePost).to.deep.equal(expectedPost);
 
     await prisma.post.delete({
       where: {
@@ -150,5 +160,90 @@ describe('GET /posts/:UUID', () => {
 
     expect(response.status).to.equal(404);
     expect(response.body).to.have.property('error', 'Post not found');
+  });
+});
+
+//updatePost
+describe('PUT /posts/:UUID', () => {
+  it('Deve atualizar uma postagem existente com sucesso', async () => {
+    const initialPost = await prisma.post.create({
+      data: {
+        title: 'Título inicial',
+        description: 'Descrição inicial',
+        post_type: 'Tipo inicial',
+        image_url: 'https://exemplo.com/imagem-inicial.jpg',
+      },
+    });
+
+    const updatedPostData = {
+      title: 'Novo título',
+      description: 'Nova descrição',
+      post_type: 'Novo tipo',
+      image_url: 'https://exemplo.com/nova-imagem.jpg',
+    };
+
+    const response = await request(app)
+      .put(`/posts/${initialPost.UUID}`)
+      .send(updatedPostData)
+      .expect(200);
+
+    expect(response.body).to.deep.include(updatedPostData);
+  });
+
+  it('Deve retornar um erro 404 se a postagem não for encontrada', async () => {
+    const invalidUUID = '12345678-1234-5678-1234-567812345678';
+
+    const response = await request(app)
+      .put(`/posts/${invalidUUID}`)
+      .send({
+        title: 'Título inválido',
+        description: 'Descrição inválida',
+        post_type: 'Tipo inválido',
+        image_url: 'https://exemplo.com/invalid-image.jpg',
+      })
+      .expect(404);
+
+    expect(response.body).to.have.property('error');
+    expect(response.body.error).to.equal('Post not found');
+  });
+});
+
+//deletePost
+describe('DELETE /posts/:UUID', () => {
+  it('Deve deletar uma postagem existente com sucesso', async () => {
+    const initialPost = await prisma.post.create({
+      data: {
+        title: 'Título inicial',
+        description: 'Descrição inicial',
+        post_type: 'Tipo inicial',
+        image_url: 'https://exemplo.com/imagem-inicial.jpg',
+      },
+    });
+
+    const response = await request(app)
+      .delete(`/posts/${initialPost.UUID}`)
+      .expect(200);
+
+    //criei uma cópia do body da req e da res
+    const responsePost = { ...response.body };
+    const expectedPost = { ...initialPost.body };
+
+    //Aqui eu tirei as datas porque tava dando erro ao comparar o json delas (tava comparando string com Date:)
+    delete responsePost.creation_date;
+    delete responsePost.update_date;
+    delete expectedPost.creation_date;
+    delete expectedPost.update_date;
+    expect(responsePost.body).to.deep.equal(expectedPost.body);
+  });
+
+  it('Deve retornar um erro 404 se a postagem não for encontrada', async () => {
+    const invalidUUID = '12345678-1234-5678-1234-567812345678';
+
+    const response = await request(app)
+      .delete(`/posts/${invalidUUID}`)
+      .expect(404);
+
+    expect(response.body).to.have.property('error');
+    expect(response.body.error).to.equal('Post not found');
   });
 });

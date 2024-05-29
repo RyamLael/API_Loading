@@ -4,7 +4,7 @@ API Loading é uma API que gerencia postagens, seguindo os métodos do CRUD de c
 
 ## Preparando o projeto:
 
-- primeiro, é necessário possuir o [Node.js](https://nodejs.org/en) instalado no seu computador
+- Primeiro, é necessário possuir o [Node.js](https://nodejs.org/en) instalado no seu computador
 
 - Clone o repositório em uma pasta do seu computador: git clone https://github.com/RyamLael/API-Loading.git
 

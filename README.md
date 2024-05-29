@@ -8,6 +8,8 @@ API Loading é uma API que gerencia postagens, seguindo os métodos do CRUD de c
 
 - Clone o repositório em uma pasta do seu computador: git clone https://github.com/RyamLael/API-Loading.git
 
+- Também é necessário ter o [yarn](https://yarnpkg.com/) instalado no computador.
+
 ### Baixando as dependências necessárias para o projeto:
 Crie uma nova instancia de terminal na pasta raíz do projeto.
 

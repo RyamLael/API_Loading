@@ -20,7 +20,8 @@ Baixar o [Express](https://expressjs.com/):
 - Execute no terminal: `yarn add express`
 
 Baixar o [Prisma](https://www.prisma.io/): 
-- Execute no terminal : yarn add prisma e depois o comando: `yarn add @prisma/client`
+
+- Execute no terminal : `yarn add prisma` e depois o comando: `yarn add @prisma/client`
 
 ## Iniciando o servidor: 
 Para conectar o prisma com o banco de dados, execute: `yarn prisma migrate dev --name init`

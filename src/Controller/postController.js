@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { postSchema, postUpdateSchema } from './validation.js';
+import { postSchema, postUpdateSchema } from '../utils/validation.js';
 
 const prisma = new PrismaClient();
 

@@ -101,6 +101,12 @@ describe('GET /posts/paginated', () => {
         post_type: 'Tipo do Post 2',
         image_url: 'https://example.com/image2.jpg',
       },
+      {
+        title: 'Post 3',
+        description: 'Descrição do Post 3',
+        post_type: 'Tipo do Post 3',
+        image_url: 'https://example.com/image3.jpg',
+      },
     ];
 
     await prisma.post.createMany({
@@ -116,7 +122,6 @@ describe('GET /posts/paginated', () => {
     expect(response.body).to.be.an('array');
     expect(response.body).to.have.lengthOf(2);
 
-    await prisma.post.deleteMany();
   });
 });
 

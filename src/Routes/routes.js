@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import postController from './postController.js';
+import postController from '../Controller/postController.js';
 
 const router = Router();
 
@@ -11,5 +11,3 @@ router.put('/posts/:UUID', postController.updatePost);
 router.delete('/posts/:UUID', postController.deletePost);
 
 export { router };
-
-// upar a api em um servidor online

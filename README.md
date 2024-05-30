@@ -26,7 +26,7 @@ Baixar o [Prisma](https://www.prisma.io/):
 ## Iniciando o servidor: 
 Para conectar o prisma com o banco de dados, execute: `yarn prisma migrate dev --name init`
 
-Por fim, basta executar o comando: `yarn dev para iniciar o servidor.`
+Por fim, basta executar o comando: `yarn dev` para iniciar o servidor.
 
 ## Consumindo a API:
 Para saber como utilizar a API, basta consultar a documentação: [API Loading](https://documenter.getpostman.com/view/35177931/2sA3Qqgstc)
